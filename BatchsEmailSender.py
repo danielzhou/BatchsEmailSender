@@ -1,8 +1,9 @@
+
 import os
 import sys
 import csv
 import smtplib
-from email.mime.base import MIMEBase 
+from email.mime.base import MIMEBase
 from email.mime.text import MIMEText
 from email.mime.image import MIMEImage
 from email.mime.multipart import MIMEMultipart
@@ -10,18 +11,20 @@ from email.utils import formataddr
 from email import encoders
 
 # ========================批量发送邮件测试（二）----邮件内容固定，主题和附件变化=================================
-
+#
 
 # --------------------发送服务器配置---------------
+
+# # addrBook = r'C:\Users\小周\Desktop\批量发送邮件\邮箱联系人表单.csv'  # 邮件地址通讯录)
+# content_path = r"C:\Users\小周\Desktop\批量发送邮件\结算款邮件内容.txt"   # 邮箱正文内容.txt
+
+"""docstring for BatchsMailSender"""
 sender_host = 'smtp.163.com:25'  # 默认服务器地址及端口
-sender_user = 'lao****@163.com'  
+sender_user = 'laoxxx@163.com'
 sender_pwd = '123456'
 sender_name = u'上海周YJ公司'
+# self.attach_type = ".xlsx"
 
-attach_path = r'C:\Users\user\Desktop\MailMaster V1.1\attchfile'   # 附件所在文件夹
-attach_type = ".xlsx"      # 附件后缀名，即类型
-addrBook = r'C:\Users\user\Desktop\MailMaster V1.1\邮箱联系人表单.csv'  # 邮件地址通讯录
-content_path = r"C:\Users\user\Desktop\MailMaster V1.1\content.txt"   # 邮箱正文内容.txt
 
 # --------------根据输入的CSV文件，获取通讯录人名和相应的邮箱地址-------
 
@@ -30,14 +33,14 @@ def getAddrBook(addrBook):
 		@作用：根据输入的CSV文件，形成相应的通讯录字典
 		@返回：字典类型，name为人名，value为对应的邮件地址
 	'''
-	with open(addrBook,'r',encoding='gbk') as addrFile: 
+	with open(addrBook,'r',encoding='gbk') as addrFile:
 		reader = csv.reader(addrFile)
 		name = []
 		value = []
 		for row in reader:
 			name.append(row[0])
 			value.append(row[1])
-	
+
 	addrs = dict(zip(name, value))
 	return addrs
 
@@ -47,28 +50,15 @@ def getAddrBook(addrBook):
 
 def getRecvAddr(addrs,person_name):
 	if not person_name in addrs:
-		print("没有此人的邮箱地址!")
+		print("没有<"+person_name+">的邮箱地址! 请在联系人中添加此人邮箱后重试。")
+		anykey = input("请按回车键（Enter）退出程序：")
+		if anykey:
+			sys.exit(0)
+	# try:
 	return addrs[person_name]
-
-
-
-# --------------------加载邮件内容-------------------------
-
-def getMailContent(content_path):
-	mail_content = ''
-
-	if not os.path.exists(content_path):
-		print("文件 content.txt 不存在")
-		exit(0)
-
-	with open(content_path,'r') as contentFile:
-		contentLines = contentFile.readlines()
-		if len(contentLines) < 1:
-			print("no content in content.txt ")
-			exit(0)
-		mail_content = "".join(contentLines) # 将其+""转为字符串就好了
-	return mail_content 
-
+	# except KeyError:
+	# 	print("通讯录中无此人："+person_name)
+	# 	# raise SystemExit
 
 # --------------------添加附件-----------------------------------
 
@@ -83,10 +73,14 @@ def addAttch(attach_file):
 
 
 # ---------------------发送邮件-----------------------
-def mailSend():
+def mailSend(attach_path,bookFile,mail_content):
 	smtp = smtplib.SMTP()   # 新建smtp对象
 	smtp.connect(sender_host)
 	smtp.login(sender_user, sender_pwd)
+	addrBook = bookFile
+	# attach_path = attach_path
+	# mail_content = mail_content
+	addrs = getAddrBook(addrBook)
 
 	for root,dirs,files in os.walk(attach_path):
 		for attach_file in files:      # attach_file : ***_2_***.xlsx
@@ -95,30 +89,19 @@ def mailSend():
 			subject = att_name
 			msg['Subject'] = subject   # 设置邮件主题
 			person_name = subject.split("_")[-1]
-
-			addrs = getAddrBook(addrBook)
 			recv_addr = getRecvAddr(addrs,person_name)
-			
 			msg['From'] = formataddr([sender_name,sender_user]) # 设置发件人名称
 			# msg['To'] = person_name # 设置收件人名称
-			msg['To'] = formataddr([person_name,recv_addr]) # 设置收件人名称	
-			mail_content = getMailContent(content_path)	
+			msg['To'] = formataddr([person_name,recv_addr]) # 设置收件人名称
+			# mail_content = getMailContent(content_path)
 			msg.attach(MIMEText(mail_content))  # 正文  MIMEText(content,'plain','utf-8')
 			attach_file = root+"\\"+attach_file
 			att = addAttch(attach_file)
 			msg.attach(att)  # 附件
 			smtp.sendmail(sender_user, [recv_addr,], msg.as_string())  # smtp.sendmail(from_addr, to_addrs, msg)
-			print("已发送： "+person_name+" <"+recv_addr+">")		
+			print("已发送： "+person_name+" <"+recv_addr+">")
 		smtp.quit()
-
-
-
-if __name__ == '__main__':
-	print("By 小周")
-	mailSend()
-	anykey = input("请按回车键（Enter）退出程序：")
-	if anykey:
-		exit(50)
+	sys.exit("Have a nice day !")
 
 
 
