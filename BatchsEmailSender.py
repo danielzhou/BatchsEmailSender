@@ -9,20 +9,20 @@ from email.mime.image import MIMEImage
 from email.mime.multipart import MIMEMultipart
 from email.utils import formataddr
 from email import encoders
+import msvcrt
+import time
 
 # ========================批量发送邮件测试（二）----邮件内容固定，主题和附件变化=================================
 #
 
 # --------------------发送服务器配置---------------
 
-# # addrBook = r'C:\Users\小周\Desktop\批量发送邮件\邮箱联系人表单.csv'  # 邮件地址通讯录)
-# content_path = r"C:\Users\小周\Desktop\批量发送邮件\结算款邮件内容.txt"   # 邮箱正文内容.txt
 
-"""docstring for BatchsMailSender"""
-sender_host = 'smtp.163.com:25'  # 默认服务器地址及端口
-sender_user = 'laoxxx@163.com'
-sender_pwd = '123456'
-sender_name = u'上海周YJ公司'
+# sender_host = 'smtp.163.com:25'  # 默认服务器地址及端口
+sender_host = 'smtp.163.com'   # 使用SSL连接，
+sender_user = 'mmshanghaijs@163.com'
+sender_pwd = '123456zwj'
+sender_name = u'批量邮件测试'
 # self.attach_type = ".xlsx"
 
 
@@ -51,8 +51,9 @@ def getAddrBook(addrBook):
 def getRecvAddr(addrs,person_name):
 	if not person_name in addrs:
 		print("没有<"+person_name+">的邮箱地址! 请在联系人中添加此人邮箱后重试。")
-		anykey = input("请按回车键（Enter）退出程序：")
-		if anykey:
+		print("请按任意键退出程序：")
+		anykey = ord(msvcrt.getch())   # 此刻捕捉键盘，任意键退出
+		if anykey in range(0,256):
 			sys.exit(0)
 	# try:
 	return addrs[person_name]
@@ -74,13 +75,15 @@ def addAttch(attach_file):
 
 # ---------------------发送邮件-----------------------
 def mailSend(attach_path,bookFile,mail_content):
-	smtp = smtplib.SMTP()   # 新建smtp对象
-	smtp.connect(sender_host)
+	# smtp = smtplib.SMTP()   # 新建smtp对象
+	# smtp.connect(sender_host)
+	smtp = smtplib.SMTP_SSL(sender_host,994)  # 使用SSL连接
 	smtp.login(sender_user, sender_pwd)
+	# # attach_path = attach_path
+	# # mail_content = mail_content
 	addrBook = bookFile
-	# attach_path = attach_path
-	# mail_content = mail_content
 	addrs = getAddrBook(addrBook)
+	count = 1
 
 	for root,dirs,files in os.walk(attach_path):
 		for attach_file in files:      # attach_file : ***_2_***.xlsx
@@ -98,10 +101,29 @@ def mailSend(attach_path,bookFile,mail_content):
 			attach_file = root+"\\"+attach_file
 			att = addAttch(attach_file)
 			msg.attach(att)  # 附件
+
+			# 增加判断是否到达最大发送限制
+			if count >= 10:
+				smtp.quit()
+				# print("")
+				time.sleep(5)  # 让子弹飞一会儿
+				count = 1
+				smtp = smtplib.SMTP_SSL(sender_host,994)  # 使用SSL连接
+				smtp.login(sender_user, sender_pwd)
 			smtp.sendmail(sender_user, [recv_addr,], msg.as_string())  # smtp.sendmail(from_addr, to_addrs, msg)
 			print("已发送： "+person_name+" <"+recv_addr+">")
+			count += 1
+			# time.sleep(5)   # 163检测，一次连接状态，最多只能发送10封邮件。故加延时，延时5秒也没用
+			time.sleep(1)
 		smtp.quit()
-	sys.exit("Have a nice day !")
+		print("请按任意键退出程序：")
+		anykey = ord(msvcrt.getch())   # 此刻捕捉键盘，任意键退出
+		if anykey in range(0,256):
+			print("Have a nice day !")
+			time.sleep(1)
+			sys.exit()
+
+
 
 
 
