@@ -14,8 +14,8 @@ from email import encoders
 
 # --------------------发送服务器配置---------------
 sender_host = 'smtp.163.com:25'  # 默认服务器地址及端口
-sender_user = 'laoliu1810181@163.com'  
-sender_pwd = '123456zwj'
+sender_user = 'lao****@163.com'  
+sender_pwd = '123456'
 sender_name = u'上海周YJ公司'
 
 attach_path = r'C:\Users\user\Desktop\MailMaster V1.1\attchfile'   # 附件所在文件夹
@@ -42,38 +42,6 @@ def getAddrBook(addrBook):
 	return addrs
 
 # addrs = {name : value}
-
-
-# ----------获取所有附件 及其不带后缀的文件名（作为主题）---------
-
-# 例如，输入：C:\Users\zwj\Desktop\MailMaster\attchfile\结算款_1_周.xlsx
-# 输出：结算款_1_周
-# def getAttNameList(attach_path,filetype):
-# 	'''
-# 		@作用：输入文件夹 和文件类型，获得该文件夹下的所有该类型文件
-# 		@返回：1. 该类型文件的文件名列表，不包括后缀和路径
-# 			  2. 该类型文件转化为邮箱附件类型后的列表
-# 	'''
-# 	att_name = []
-# 	att = []
-# 	for root,dirs,files in os.walk(attach_path):
-# 		for i in files:
-# 			if filetype in i:
-# 				att_name.append(i.replace(filetype,""))  # 生成不带‘.xlsx’后缀名的文件名
-# 	return att_name
-
-# att_name = getAttNameList(attach_path,attach_type)
-
-# ---------------根据对应的附件名，获取要发送邮件的人名------------
-
-# 例如，输入["结算款_1_周","结算款_2_朱朱"]，输出['周', '朱朱']
-# def  getPersonName(att_name):
-# 	person_name = []
-# 	for name in att_name:
-# 		person_name.append(name.split("_")[-1])
-# 	return person_name
-
-# person_name = getPersonName(att_name)
 
 # -------------------根据附件名称中获得的人名，查找通讯录，找到对应的邮件地址---------------
 
@@ -148,9 +116,9 @@ def mailSend():
 if __name__ == '__main__':
 	print("By 小周")
 	mailSend()
-	anykey = input("请按任意键退出程序：")
+	anykey = input("请按回车键（Enter）退出程序：")
 	if anykey:
-		exit(5)
+		exit(50)
 
 
 
