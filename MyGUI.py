@@ -5,11 +5,13 @@
 import tkinter
 from tkinter.constants import *
 from tkinter import *
-from tkinter import ttk
+# from tkinter import ttk
 from tkinter.filedialog import askdirectory
 from tkinter.filedialog import askopenfilename
 from tkinter.scrolledtext import ScrolledText
+import tkinter.messagebox
 from tkinter import END
+import time
 import BatchsEmailSender
 
 
@@ -124,15 +126,33 @@ def gui_start():
 
 # gui_start()
 
+# 判断是否过试用期
+def if_expired():
+	end_time = '2018-11-26 10:00:00'  # 设置截止时间
+	end_time = time.strptime(end_time,'%Y-%m-%d %H:%M:%S')
+	end_time = int(time.mktime(end_time))
+
+	cur_time = int(time.time()) # 获取当前时间
+
+	left_time = end_time - cur_time   # 剩余时间
+
+	if left_time <= 0:
+		warning_window = tkinter.Tk()
+		warning_window.title("批量发送邮件-for 速优 -- By 小周 ")
+		warning_window.geometry('600x480+300+200')  # 设置尺寸
+		warning_window.attributes('-alpha',1)  # 属性
+		tkinter.messagebox.showwarning(title="温馨提示",message="试用期已过，如需续用，请联系作者邮箱：\n小周 <1358304569@qq.com>")
+		warning_window.mainloop()
+		sys.exit()
+	else:
+		pass
+
+
 if __name__ == '__main__':
+	# 判断是否到期
+	if_expired()
+	# 正常运行
 	gui_start()
-
-
-
-# 这是来自GUI的测试邮件，
-# 收到请忽略，
-# 谢谢。
-
 
 
 

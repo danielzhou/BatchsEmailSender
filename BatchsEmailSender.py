@@ -20,9 +20,9 @@ import time
 
 # sender_host = 'smtp.163.com:25'  # 默认服务器地址及端口
 sender_host = 'smtp.163.com'   # 使用SSL连接，
-sender_user = 'mmshanghaijs@163.com'
-sender_pwd = '123456zwj'
-sender_name = u'批量邮件测试'
+sender_user = 'mmxxx@163.com'
+sender_pwd = '123456'
+sender_name = u'xxx公司'
 # self.attach_type = ".xlsx"
 
 
