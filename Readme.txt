@@ -1,57 +1,58 @@
-=================��Ŀ���=================
-����Ϻ�����װ�����޹�˾ÿ�µĽ���Ԥ����ʼ���������Ĺ��ߣ�
-�������������ʼ���ÿ���ʼ��������ռ������ֵĸ���
+=================项目简介=================
+针对上海速优装饰有限公司每月的结算款、预算款邮件发送需求的工具，
+用于批量发送邮件，每个邮件包括含收件人名字的附件
 
-��Ŀ��ʼ�ڣ�2018��8��25��
-������Ա��С��
+项目开始于：2018年8月25号
+开发人员：小周
+项目需求背景及特征可以参见本人CSDN博客：https://blog.csdn.net/qq_41059320/article/details/82754577
 
 ----------------V2.3--------------
 
-���ʱ�䣺2018-09-09
+完成时间：2018-09-09
 
-��2.2�汾�����ϣ�
-1���������������ƣ�������Ч����Ϊ2018-11-26 10:00:00�����ں���е�����ʾ�����ɼ���ʹ��
+在2.2版本基础上，
+1、增加试用期限制，内置有效期限为2018-11-26 10:00:00，到期后进行弹窗提示，不可继续使用
 
 -----------------V2.2-----------------
 
-���ʱ�䣺2018-09-07
+完成时间：2018-09-07
 
-��2.0�汾�����ϣ�
-1��ʹ��994�˿ڵ�SSL���ӷ�ʽ������25�˿ڱ����Σ������޴𸴣�
-2�������163����һ������ֻ�ܷ�10���ʼ����������ƣ�
-3�������˿ͻ�����ʾ��ʹ���������������л�����ϵ��ȱ�٣�����ʾ�ͻ���Ȼ��������˳���
+在2.0版本基础上，
+1、使用994端口的SSL连接方式，避免25端口被屏蔽，连接无答复；
+2、解决了163邮箱一次连接只能发10封邮件的数量限制；
+3、完善了客户端提示，使得无论是正常运行还是联系人缺少，都提示客户，然后按任意键退出。
 
 -----------------V2.0-----------------
 
-���ʱ�䣺2018-09-02
+完成时间：2018-09-02
 
-1����V1.x�汾�����ϣ���������GUI����0���棬��GUI����ѡ�񸽼��ļ��С�����ͨѶ¼�ļ���׫д�ʼ����ݣ����ı�����
+1、在V1.x版本基础上，初步建立GUI操作0界面，在GUI界面选择附件文件夹、邮箱通讯录文件和撰写邮件内容（纯文本）。
 
-2������MyGUI.py�ļ���ʹ��tkinterģ�顣
+2、增加MyGUI.py文件，使用tkinter模块。
 
 -----------------V1.0 V1.1----------------
 
-���ʱ�䣺2018-08-29
-1�����ܣ���������ʼ����ͣ���ҪԤ�����븽���ļ��У�������ͨѶ¼��CSV�ļ����������������ݴ���TXT�ļ��У�
+完成时间：2018-08-29
+1、功能：初步完成邮件发送，需要预先输入附件文件夹，和邮箱通讯录（CSV文件），并把邮箱内容存在TXT文件中；
 
-2��ʹ��smtp��emailģ��
+2、使用smtp，email模块
 
-2��������
+2、包括：
 
-sender_host  # Ĭ�Ϸ�������ַ���˿�
+sender_host  # 默认服务器地址及端口
 sender_user  
 sender_pwd = 
-sender_name = u'�Ϻ���YJ��˾'
-attach_path = r'C:\Users\attchfile'   # ���������ļ���
-attach_type = ".xlsx"      # ������׺����������
-addrBook = r'C:\������ϵ�˱���.csv'  # �ʼ���ַͨѶ¼
-content_path = r"C:\content.txt"   # ������������.txt
+sender_name = u'上海周YJ公司'
+attach_path = r'C:\Users\attchfile'   # 附件所在文件夹
+attach_type = ".xlsx"      # 附件后缀名，即类型
+addrBook = r'C:\邮箱联系人表单.csv'  # 邮件地址通讯录
+content_path = r"C:\content.txt"   # 邮箱正文内容.txt
 
-# ���������CSV�ļ�����ȡͨѶ¼��������Ӧ�������ַ---def getAddrBook(addrBook)
-# ���ݸ��������л�õ�����������ͨѶ¼���ҵ���Ӧ���ʼ���ַ--def getRecvAddr(addrs,person_name):
-# �����ʼ�����---def getMailContent(content_path):
-# ���Ӹ���--def addAttch(attach_file):
-# �����ʼ�---def mailSend():
+# 根据输入的CSV文件，获取通讯录人名和相应的邮箱地址---def getAddrBook(addrBook)
+# 根据附件名称中获得的人名，查找通讯录，找到对应的邮件地址--def getRecvAddr(addrs,person_name):
+# 加载邮件内容---def getMailContent(content_path):
+# 添加附件--def addAttch(attach_file):
+# 发送邮件---def mailSend():
 
-V1.1�У�ֻ�ǽ�V1.0�ж���ĺ���ȥ���ļ��汾������һ����
+V1.1中，只是将V1.0中多余的函数去掉的简洁版本，功能一样。
 
